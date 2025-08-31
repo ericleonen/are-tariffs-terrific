@@ -25,17 +25,19 @@ def download_tariff_data(
     -------
     None
     """
-    print("Downloading USITC annual tariff data from {min_year}-{max_year}:")
+    print(f"Downloading USITC annual tariff data from {min_year}-{max_year}:")
   
     for year in range(min_year, max_year + 1):
         f_name = f"tariff_data_{year}.xlsx"
         f_path = os.path.join(dir_to, f_name)
-      
+
+        os.makedirs(dir_to, exist_ok=True)
+
         if os.path.exists(f_path):
-            print("    > Skipping download of {year} data")
+            print(f"    > Skipping download of {year} data")
             continue
       
-        print(f"    > Attempting to download {year} data: ", end=" ")
+        print(f"    > Downloading {year} data:", end=" ")
 
         try:
             url = f"https://www.usitc.gov/tariff_affairs/documents/tariff_data/tariff_data_{year}.zip"
@@ -54,5 +56,9 @@ def download_tariff_data(
             print("❌")
             print(f"An exception occurred: {e}")
 
+            return
+        
+    print(f"Successfully downloaded all data to {dir_to}.")
+
 if __name__ == "__main__":
-    download_tariff_data("data/processed/tariff_data")
+    download_tariff_data("data/raw/tariff_data")
